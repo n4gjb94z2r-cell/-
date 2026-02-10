@@ -1,144 +1,278 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: deep-brown; icon-glyph: magic;
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>fvde-aruf-webhook 超完成版 (スマホ対応)</title>
+<title>fvde-aruf-webhook RED ∞</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body {
-    font-family: sans-serif;
-    background: #121212;
-    color: #fff;
-    padding: 15px;
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Creepster&display=swap');
+
+  * {
     margin: 0;
-}
-
-h1 { font-size: 24px; text-align: center; }
-
-input, textarea, button {
-    margin: 5px 0;
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: none;
+    padding: 0;
     box-sizing: border-box;
-}
+  }
 
-button {
-    width: 48%;
-    margin-right: 2%;
-    margin-top: 10px;
+  body {
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(-45deg, #1a0000, #330000, #660000, #990000);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color: #ff2222;
+    min-height: 100vh;
+    padding: 15px 20px;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  h1 {
+    text-align: center;
+    font-family: 'Creepster', cursive;
+    font-size: 3rem;
+    margin: 20px 0 30px;
+    color: #ff0000;
+    text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000, 0 0 60px #ff0000;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes neonGlow {
+    from { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; }
+    to   { text-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000, 0 0 100px #ff0000; }
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: rgba(0,0,0,0.75);
+    border: 3px solid #ff0000;
+    border-radius: 20px;
+    padding: 30px 25px;
+    box-shadow: 0 0 50px rgba(255,0,0,0.6);
+    backdrop-filter: blur(8px);
+  }
+
+  label {
+    display: block;
+    margin: 20px 0 8px;
+    font-size: 1.2rem;
+    color: #ff5555;
+    text-shadow: 0 0 5px #ff0000;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 16px;
+    background: rgba(20,0,0,0.9);
+    border: 2px solid #ff3333;
+    border-radius: 12px;
+    color: #ffdddd;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+  }
+
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #ff0000;
+    box-shadow: 0 0 20px #ff0000;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 15px;
+    margin: 30px 0 20px;
+  }
+
+  button {
+    flex: 1;
+    padding: 18px;
+    font-size: 1.4rem;
+    font-weight: 900;
+    border: none;
+    border-radius: 15px;
     cursor: pointer;
-    background-color: #1e90ff;
+    transition: all 0.4s;
+    text-shadow: 0 0 8px #000;
+  }
+
+  #startBtn {
+    background: linear-gradient(135deg, #ff0000, #cc0000, #990000);
     color: white;
+    box-shadow: 0 0 25px #ff0000;
+  }
+
+  #startBtn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 50px #ff0000;
+  }
+
+  #startBtn:active {
+    transform: scale(0.98);
+  }
+
+  #stopBtn {
+    background: linear-gradient(135deg, #444444, #222222);
+    color: #ff6666;
+    border: 3px solid #ff3333;
+    box-shadow: 0 0 15px #ff3333;
+  }
+
+  #stopBtn:hover {
+    background: linear-gradient(135deg, #ff3333, #cc0000);
+    color: white;
+    transform: scale(1.08);
+    box-shadow: 0 0 40px #ff0000;
+  }
+
+  #status {
+    margin-top: 25px;
+    padding: 20px;
+    background: rgba(0,0,0,0.7);
+    border: 2px solid #ff3333;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 1.5rem;
     font-weight: bold;
-}
+    min-height: 80px;
+    color: #ffdddd;
+    box-shadow: inset 0 0 20px rgba(255,0,0,0.3);
+  }
 
-button:last-child {
-    margin-right: 0;
-    background-color: #ff4c4c;
-}
-
-#status {
+  #progress {
     margin-top: 15px;
-    font-weight: bold;
-    font-size: 16px;
-}
+    height: 12px;
+    background: #200000;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: inset 0 0 10px #000;
+  }
 
-@media screen and (max-width: 480px) {
-    button {
-        width: 100%;
-        margin-right: 0;
-    }
-}
+  #progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff0000, #ff6666, #ff0000);
+    background-size: 200% 100%;
+    animation: progressAnim 3s linear infinite;
+  }
+
+  @keyframes progressAnim {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 2.2rem; }
+    .button-group { flex-direction: column; gap: 15px; }
+    button { padding: 20px; font-size: 1.5rem; }
+  }
 </style>
 </head>
 <body>
-<h1>fvde-aruf-webhook 超完成版</h1>
 
-<label>Webhook URL (生成済みの場合):</label>
-<input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/...">
+<div class="container">
+  <h1>fvde-aruf-webhook RED ∞</h1>
 
-<label>サーバーID (Webhook作成補助):</label>
-<input type="text" id="serverId" placeholder="任意">
+  <label>Webhook URL</label>
+  <input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/...">
 
-<label>チャンネルID (Webhook作成補助):</label>
-<input type="text" id="channelId" placeholder="任意">
+  <label>送信メッセージ（改行で複数登録・順番にループ）</label>
+  <textarea id="messages" rows="8" placeholder="@everyone 荒らし開始！！\nhttps://discord.gg/荒らし\nサーバー壊すぞ\n..."></textarea>
 
-<label>送信メッセージ (複数行可、改行で分ける):</label>
-<textarea id="messages" rows="6" placeholder="メッセージを改行で複数入力"></textarea>
+  <label>送信間隔（秒・最低0.8秒推奨）</label>
+  <input type="number" id="interval" value="1.2" min="0.8" step="0.1">
 
-<label>送信回数 (0で無限):</label>
-<input type="number" id="count" value="0" min="0">
+  <div class="button-group">
+    <button id="startBtn">無限送信開始</button>
+    <button id="stopBtn">緊急停止</button>
+  </div>
 
-<label>送信間隔 (秒、最低1秒):</label>
-<input type="number" id="interval" value="1" min="1" step="0.1">
-
-<button id="startBtn">送信開始</button>
-<button id="stopBtn">送信停止</button>
-
-<div id="status">未送信</div>
+  <div id="status">待機中...</div>
+  <div id="progress"><div id="progress-bar"></div></div>
+</div>
 
 <script>
-let intervalId;
-let sentCount = 0;
-let currentMessageIndex = 0;
+const startBtn = document.getElementById('startBtn');
+const stopBtn = document.getElementById('stopBtn');
+const status = document.getElementById('status');
+const progressBar = document.getElementById('progress-bar');
 
-function updateStatus(statusText) {
-    const status = document.getElementById("status");
-    status.textContent = statusText || `送信中: ${sentCount}回`;
+let intervalId = null;
+let sentCount = 0;
+let currentIndex = 0;
+let isRunning = false;
+
+function updateStatus(text, color = '#ffdddd') {
+  status.textContent = text;
+  status.style.color = color;
+  status.classList.add('pulse');
+  setTimeout(() => status.classList.remove('pulse'), 3000);
 }
 
-document.getElementById("startBtn").onclick = () => {
-    let url = document.getElementById("webhookUrl").value.trim();
-    const serverId = document.getElementById("serverId").value.trim();
-    const channelId = document.getElementById("channelId").value.trim();
-    const messagesInput = document.getElementById("messages").value.trim();
-    let count = parseInt(document.getElementById("count").value);
-    let intervalSec = parseFloat(document.getElementById("interval").value);
+function updateProgress() {
+  // 無限なので進捗バーはループアニメーションで表現
+  progressBar.style.width = '100%';
+}
 
-    if (!url) {
-        alert("Webhook URLを入力してください。");
-        return;
-    }
-    if (!messagesInput) {
-        alert("メッセージを入力してください。");
-        return;
-    }
+startBtn.onclick = () => {
+  if (isRunning) return;
 
-    // 複数メッセージを配列化
-    const messages = messagesInput.split(/\r?\n/).filter(m => m.trim() !== "");
+  const url = document.getElementById('webhookUrl').value.trim();
+  const messagesText = document.getElementById('messages').value.trim();
+  let intervalSec = parseFloat(document.getElementById('interval').value);
 
-    if (intervalSec < 1) intervalSec = 1; // Discord制限回避
-    intervalSec = intervalSec * 1000;
+  if (!url) return alert("Webhook URLを入力してください");
+  if (!messagesText) return alert("メッセージを入力してください");
 
-    sentCount = 0;
-    currentMessageIndex = 0;
-    updateStatus();
+  const messages = messagesText.split(/\r?\n/).filter(m => m.trim() !== "");
 
-    intervalId = setInterval(() => {
-        const message = messages[currentMessageIndex];
-        fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ content: message })
-        }).then(res => console.log("送信成功:", res.status))
-          .catch(err => console.error("送信失敗:", err));
+  if (intervalSec < 0.8) intervalSec = 0.8;
+  intervalSec *= 1000;
 
-        sentCount++;
-        currentMessageIndex = (currentMessageIndex + 1) % messages.length;
-        updateStatus();
+  sentCount = 0;
+  currentIndex = 0;
+  isRunning = true;
+  startBtn.disabled = true;
+  startBtn.textContent = "無限送信中...";
+  stopBtn.disabled = false;
+  updateStatus("無限送信開始！（停止ボタンで中断）", "#ff0000");
+  updateProgress();
 
-        if (count > 0 && sentCount >= count) {
-            clearInterval(intervalId);
-            updateStatus(`送信完了: ${sentCount}回`);
-        }
-    }, intervalSec);
+  intervalId = setInterval(() => {
+    if (!isRunning) return;
+
+    const message = messages[currentIndex];
+
+    fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: message })
+    })
+    .then(res => {
+      sentCount++;
+      currentIndex = (currentIndex + 1) % messages.length;
+      updateStatus(`送信中... (${sentCount}回完了)`, "#00ff00");
+    })
+    .catch(err => {
+      updateStatus(`送信失敗（ネットワークエラー） - ${sentCount}回`, "#ff4444");
+      console.error(err);
+    });
+  }, intervalSec);
 };
 
-document.getElementById("stopBtn").onclick = () => {
-    clearInterval(intervalId);
-    updateStatus(`送信停止: ${sentCount}回`);
+stopBtn.onclick = () => {
+  if (intervalId) clearInterval(intervalId);
+  isRunning = false;
+  startBtn.disabled = false;
+  startBtn.textContent = "無限送信開始";
+  stopBtn.disabled = true;
+  updateStatus(`緊急停止！ (${sentCount}回送信済み)`, "#ff8800");
+  progressBar.style.width = '0%';
 };
 </script>
 </body>
